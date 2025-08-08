@@ -13,7 +13,7 @@ export default function RootLayout({
 }) {
   return (
     // REMOVED overflow-hidden from here
-    <html lang="en" className="h-full bg-black">
+    <html lang="en" className="h-full bg-white">
       {/* REMOVED overflow-hidden from here */}
       <body className="h-full m-0 p-0">{children}</body>
     </html>

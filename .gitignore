@@ -17,7 +17,10 @@
 /.next/
 /out/
 
-/public
+/public/*
+/components/HeroSection.tsx
+/components/ScrollVideoFrames.tsx
+
 # production
 /build
 
