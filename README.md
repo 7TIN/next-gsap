@@ -1,36 +1,78 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+
+
+# Scroll-Based Video Animation with GSAP & Next.js
+
+This project demonstrates how to create a cinematic, scroll-driven animation using a sequence of image frames, powered by GSAP's ScrollTrigger in a Next.js application.
+
+
 
 ## Getting Started
 
-First, run the development server:
+Follow these steps to get the project running on your local machine.
+
+### 1. Clone the Repository
+
+Clone this project to your local machine using git.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/7TIN/next-gsap.git
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Install Dependencies & Run
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Navigate into the project directory and install the required npm packages.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+cd next-gsap
+pnpm install or npm install
+pnpm run dev or npm run dev
+```
 
-## Learn More
+Open [http://localhost:3000] in your browser to see the running application.
 
-To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Creating & Using Your Own Image Frames
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The animation is powered by a sequence of images (frames) extracted from a video. Here’s how to create your own.
 
-## Deploy on Vercel
+### Step 1: Create the Image Frames from a Video
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 1. Using a Video Editor
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+If you use a video editor like Adobe Premiere Pro, DaVinci Resolve, or Final Cut Pro, you can typically use the "Export Frames" or "Image Sequence" option in the export settings.
+
+Make sure your export format is PNG.
+Set the filename pattern to be sequential, like frame_00001.png, frame_00002.png, etc.
+
+### 2. Using FFMPEG (Command-Line)
+
+FFMPEG is a powerful free tool for this task. After installing it on your system, run the following command in your terminal:
+
+```Bash
+
+ffmpeg -i my-video.mp4 -vf "fps=30" path/to/your-project/public/frames/frame-%05d.png
+```
+- -i my-video.mp4: Your input video file.
+
+- -vf "fps=30": Sets the output to 30 frames per second.
+
+The final path tells FFMPEG to directly create a frames folder inside your project's public directory and save the images there.
+
+
+
+### Step 2: Use the Frames in the Code
+
+1.  **Move the Frames:** Take the entire `frames` folder you just created and place it inside the **`/public`** directory of your Next.js project. The final path should be `/public/frames/`.
+
+2.  **Update the Component:** Open the `AnimatedHero.tsx` component and check these two things:
+
+      * **`frameCount`:** Make sure this variable matches the total number of images you generated.
+        ```javascript
+        const frameCount = 240; // Change this to your total frame count
+        ```
+      * **`currentFrame` Function:** This function generates the path for each image. If your file naming is different from the FFMPEG command above, you **must** update this function to match your filenames exactly.
+        ```javascript
+        const currentFrame = (index: number) =>
+          // This path must match your files in the /public/frames folder
+          `/frames/frame-${String(index + 1).padStart(5, "0")}.png`;
+        ```
